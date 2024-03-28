@@ -34,6 +34,6 @@
     "@wagmi/core": "2.6.4",
     "@web3modal/wagmi": "4.0.0",
     "svelte-french-toast": "1.2.0",
-    "viem": "2.7.6"
+    "viem": "2.9.4"
   }
 }
