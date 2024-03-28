@@ -30,7 +30,7 @@
     "@solana/web3.js": "1.89.0",
     "@taquito/signer": "^15.1.0",
     "@taquito/taquito": "^15.1.0",
-    "@walletconnect/web3wallet": "1.10.3",
+    "@walletconnect/web3wallet": "1.10.3-canary-0ff236b6",
     "@zerodev/ecdsa-validator": "5.1.0",
     "@zerodev/presets": "5.1.4",
     "@zerodev/sdk": "5.1.8",

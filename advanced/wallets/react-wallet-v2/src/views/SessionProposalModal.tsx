@@ -248,10 +248,10 @@ export default function SessionProposalModal() {
         if (reorderedEip155Accounts.length > 0) {
           namespaces.eip155.accounts = reorderedEip155Accounts
         }
-
         await web3wallet.approveSession({
           id: proposal.id,
-          namespaces
+          namespaces,
+          sessionConfig: { disableDeepLink: true }
         })
         SettingsStore.setSessions(Object.values(web3wallet.getActiveSessions()))
       } catch (e) {
