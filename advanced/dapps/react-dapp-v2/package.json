@@ -15,7 +15,7 @@
     "@kadena/client": "^0.5.0",
     "@kadena/cryptography-utils": "^0.4.0",
     "@kadena/types": "^0.6.0",
-    "@multiversx/sdk-core": "12.18.0",
+    "@multiversx/sdk-core": "12.19.1",
     "@multiversx/sdk-wallet": "4.2.0",
     "@polkadot/util-crypto": "^10.1.2",
     "@solana/web3.js": "^1.36.0",

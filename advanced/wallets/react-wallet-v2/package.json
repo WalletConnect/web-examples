@@ -21,7 +21,7 @@
     "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.14.9",
     "@mui/material": "^5.14.10",
-    "@multiversx/sdk-core": "12.18.0",
+    "@multiversx/sdk-core": "12.19.1",
     "@multiversx/sdk-wallet": "4.2.0",
     "@near-wallet-selector/wallet-utils": "^8.0.0",
     "@nextui-org/react": "1.0.8-beta.5",
