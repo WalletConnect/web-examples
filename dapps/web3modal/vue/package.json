@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@wagmi/connectors": "4.1.14",
-    "@wagmi/core": "2.6.5",
+    "@wagmi/core": "2.6.10",
     "@web3modal/wagmi": "4.0.5",
     "core-js": "3.36.0",
     "viem": "2.7.9",
