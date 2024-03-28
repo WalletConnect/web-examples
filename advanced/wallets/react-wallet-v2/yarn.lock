@@ -849,9 +849,9 @@
     tweetnacl "^1.0.3"
 
 "@kadena/types@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@kadena/types/-/types-0.6.0.tgz#2fe5af3cf6e555d5b17f29ff7421a0b31115c49a"
-  integrity sha512-tWwpPs7OT3eA2d5aATa1p4QxXKMLxt8/+Gr7SB83KjtUYxCIsjFmwNbjM84osufjDqAXHNJzfVEs4zBA9nCFNw==
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@kadena/types/-/types-0.6.1.tgz#167b1bc0ddf9c28df6dc5ab366509e032f8e94d0"
+  integrity sha512-TNGwKdoILpCslbcEvhtaz96kVzutu68ez1+QYx/NRFgjhm039v6yQ5cO7ibeszumCxQeMhv4yEl3SQCHJj7IoQ==
 
 "@material-ui/core@^4.12.4":
   version "4.12.4"
