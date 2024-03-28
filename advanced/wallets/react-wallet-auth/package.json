@@ -8,9 +8,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cosmjs/amino": "0.32.2",
-    "@cosmjs/encoding": "0.32.2",
-    "@cosmjs/proto-signing": "0.32.2",
+    "@cosmjs/amino": "0.32.3",
+    "@cosmjs/encoding": "0.32.3",
+    "@cosmjs/proto-signing": "0.32.3",
     "@json-rpc-tools/utils": "1.7.6",
     "@nextui-org/react": "1.0.8-beta.5",
     "@polkadot/keyring": "^10.1.2",
