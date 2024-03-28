@@ -9,9 +9,9 @@
     "prettier:write": "prettier --write '**/*.{js,ts,jsx,tsx}'"
   },
   "dependencies": {
-    "@cosmjs/amino": "0.32.2",
-    "@cosmjs/encoding": "0.32.2",
-    "@cosmjs/proto-signing": "0.32.2",
+    "@cosmjs/amino": "0.32.3",
+    "@cosmjs/encoding": "0.32.3",
+    "@cosmjs/proto-signing": "0.32.3",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@json-rpc-tools/utils": "1.7.6",
