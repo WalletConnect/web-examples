@@ -12,7 +12,7 @@
     "@wagmi/core": "2.6.5",
     "@web3modal/wagmi": "4.0.5",
     "core-js": "3.36.0",
-    "viem": "2.7.9",
+    "viem": "2.9.4",
     "vue": "3.4.19"
   },
   "devDependencies": {
