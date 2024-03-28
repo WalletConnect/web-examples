@@ -47,6 +47,20 @@ export const EIP155ChainData = {
     slip44: 60,
     testnet: true,
   },
+  "50": {
+    name: "XDC Network",
+    id: "eip155:50",
+    rpc: ["https://erpc.xdcrpc.com"],
+    slip44: 60,
+    testnet: false,
+  },
+  "51": {
+    name: "XDC Apothem TestNet",
+    id: "eip155:51",
+    rpc: ["https://apothem.xdcrpc.com"],
+    slip44: 60,
+    testnet: true,
+  },
   "69": {
     name: "Optimism Kovan",
     id: "eip155:69",

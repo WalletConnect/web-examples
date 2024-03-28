@@ -7,6 +7,7 @@ export const DEFAULT_MAIN_CHAINS = [
   // mainnets
   "eip155:1",
   "eip155:10",
+  "eip155:50",
   "eip155:100",
   "eip155:137",
   "eip155:324",
@@ -24,6 +25,7 @@ export const DEFAULT_MAIN_CHAINS = [
 export const DEFAULT_TEST_CHAINS = [
   // testnets
   "eip155:5",
+  "eip155:51",
   "eip155:11155111",
   "eip155:280",
   "eip155:420",
