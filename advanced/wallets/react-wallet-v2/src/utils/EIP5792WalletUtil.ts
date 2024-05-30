@@ -1,6 +1,7 @@
 import { eip155Addresses } from './EIP155WalletUtil'
 import {
   GetCapabilitiesResult,
+  SendCallsParams,
   supportedEIP5792CapabilitiesForEOA,
   supportedEIP5792CapabilitiesForSCA
 } from '@/data/EIP5792Data'
@@ -19,4 +20,12 @@ export function getWalletCapabilities(addresses: string[]) {
     walletCapabilities[addr] = supportedEIP5792CapabilitiesForSCA
   })
   return walletCapabilities
+}
+
+export const getSendCallData = (sendCallParams: SendCallsParams) => {
+  return sendCallParams.calls.map(call => ({
+    to: call.to,
+    value: BigInt(call.value || 0),
+    data: call.data || '0x'
+  }))
 }

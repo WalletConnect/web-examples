@@ -1,6 +1,7 @@
 import {
   ENTRYPOINT_ADDRESS_V07,
   SmartAccountClientConfig,
+  UserOperation,
   isSmartAccountDeployed
 } from 'permissionless'
 import { SmartAccountLib } from './SmartAccountLib'
@@ -11,7 +12,16 @@ import {
   getSafe7579InitialValidators,
   signerToSafe7579SmartAccount
 } from '@/utils/safe7579AccountUtils/signerToSafe7579SmartAccount'
-import { Address, Hex, concatHex, encodeFunctionData, keccak256, zeroAddress } from 'viem'
+import {
+  Address,
+  Hex,
+  concatHex,
+  createClient,
+  encodeFunctionData,
+  http,
+  keccak256,
+  zeroAddress
+} from 'viem'
 import { signMessage } from 'viem/accounts'
 import {
   PERMISSION_VALIDATOR_ADDRESS,
@@ -24,6 +34,9 @@ import {
 } from '@/utils/permissionValidatorUtils'
 import { setupSafeAbi } from '@/utils/safe7579AccountUtils/abis/Launchpad'
 import { Execution } from '@/utils/safe7579AccountUtils/userop'
+import { paymasterActionsEip7677 } from 'permissionless/experimental'
+import { getSendCallData } from '@/utils/EIP5792WalletUtil'
+import { SendCallsParams, SendCallsPaymasterServiceCapabilityParam } from '@/data/EIP5792Data'
 
 export class SafeSmartAccountLib extends SmartAccountLib {
   async getClientConfig(): Promise<SmartAccountClientConfig<EntryPoint>> {
@@ -164,5 +177,119 @@ export class SafeSmartAccountLib extends SmartAccountLib {
       permittedScopeData: permittedScopeData,
       permittedScopeSignature: permittedScopeSignature
     }
+  }
+
+  async sendERC5792Calls(sendCallsParam: SendCallsParams) {
+    if (!this.client || !this.client.account) {
+      throw new Error('Client not initialized')
+    }
+    const gasPrice = (await this.bundlerClient.getUserOperationGasPrice()).fast
+    const calls = getSendCallData(sendCallsParam)
+    const accountDeployed = await isSmartAccountDeployed(
+      this.publicClient,
+      this.client.account.address
+    )
+    let callData = await this.client.account.encodeCallData(calls)
+    if (!accountDeployed) {
+      const initialValidators = getSafe7579InitialValidators()
+      const initData = getSafe7579InitData(this.signer.address, initialValidators, calls)
+      const setUpSafe7579Calldata = encodeFunctionData({
+        abi: setupSafeAbi,
+        functionName: 'setupSafe',
+        args: [initData]
+      })
+      callData = setUpSafe7579Calldata
+    }
+
+    const capabilities = sendCallsParam.capabilities
+
+    if (capabilities && capabilities['paymasterService']) {
+      console.log('executing sendCalls with paymasterService')
+      const paymasterService = capabilities[
+        'paymasterService'
+      ] as SendCallsPaymasterServiceCapabilityParam
+
+      const paymasterUrl = paymasterService.url
+
+      const userOpPreStubData: Omit<
+        UserOperation<'v0.7'>,
+        'signature' | 'paymaster' | 'paymasterData'
+      > = {
+        sender: this.client.account.address,
+        nonce: await this.client.account.getNonce(),
+        factory: await this.client.account.getFactory(),
+        factoryData: await this.client.account.getFactoryData(),
+        callData: callData,
+        callGasLimit: 0n,
+        verificationGasLimit: 0n,
+        preVerificationGas: 0n,
+        maxFeePerGas: gasPrice.maxFeePerGas,
+        maxPriorityFeePerGas: gasPrice.maxPriorityFeePerGas,
+        // paymaster: '0x',
+        paymasterVerificationGasLimit: 0n,
+        paymasterPostOpGasLimit: 0n
+        // paymasterData: '0x',
+        // signature: '0x'
+      }
+
+      const paymasterClient = createClient({
+        chain: this.chain,
+        transport: http(paymasterUrl)
+      }).extend(paymasterActionsEip7677(ENTRYPOINT_ADDRESS_V07))
+
+      const paymasterStubData = await paymasterClient.getPaymasterStubData({
+        userOperation: userOpPreStubData,
+        chain: this.chain,
+        context: paymasterService.context
+      })
+      console.log({ paymasterStubData })
+      const userOpWithStubData: UserOperation<'v0.7'> = {
+        ...userOpPreStubData,
+        ...paymasterStubData,
+        signature: '0x'
+      }
+
+      const dummySignature = await this.client.account.getDummySignature(userOpWithStubData)
+      userOpWithStubData.signature = dummySignature
+
+      const gasEstimation = await this.bundlerClient.estimateUserOperationGas({
+        userOperation: userOpWithStubData
+      })
+      console.log({ gasEstimation })
+      const userOpWithGasEstimates: UserOperation<'v0.7'> = {
+        ...userOpWithStubData,
+        ...gasEstimation
+      }
+
+      const paymasterData = await paymasterClient.getPaymasterData({
+        userOperation: {
+          ...userOpWithGasEstimates,
+          paymasterPostOpGasLimit: gasEstimation.paymasterPostOpGasLimit || 0n,
+          paymasterVerificationGasLimit: gasEstimation.paymasterVerificationGasLimit || 0n
+        },
+        chain: this.chain,
+        context: paymasterService.context
+      })
+      console.log({ paymasterData })
+      const userOpWithPaymasterData: UserOperation<'v0.7'> = {
+        ...userOpWithGasEstimates,
+        ...paymasterData
+      }
+
+      const userOp = userOpWithPaymasterData
+
+      const newSignature = await this.client.account.signUserOperation(userOp)
+      console.log('Signatures', { old: userOp.signature, new: newSignature })
+
+      userOp.signature = newSignature
+
+      const userOpHash = await this.bundlerClient.sendUserOperation({
+        userOperation: userOp
+      })
+      console.log({ userOpHash })
+      return userOpHash
+    }
+    console.log('executing sendCalls')
+    return this.sendBatchTransaction(calls)
   }
 }

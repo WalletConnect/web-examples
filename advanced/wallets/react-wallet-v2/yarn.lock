@@ -5907,10 +5907,10 @@ pbkdf2@^3.0.9, pbkdf2@^3.1.2:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-permissionless@0.1.21:
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/permissionless/-/permissionless-0.1.21.tgz#794ac5cc7de56161ecec9eac0a9e6821371db131"
-  integrity sha512-/7zI4082w8pUYU/Xi4GOcWc4vhgjkW15/q7srA+b3TCn6/Uhnr1CjQl8ABJWEF1SYlVE+/x8e8RntBZ9VRDYpw==
+permissionless@0.1.29:
+  version "0.1.29"
+  resolved "https://registry.yarnpkg.com/permissionless/-/permissionless-0.1.29.tgz#185faa51d106422670b6c92cfca861f889e9de8d"
+  integrity sha512-jKkgl3G2b4hv5DvX2U8v0OI3JfX+nEzj9a6zsrcXuJaLZdS14td4tExnlmBY93nUN6lRC6NfPZjdLbi8Dkzz7w==
 
 picocolors@^1.0.0:
   version "1.0.0"
@@ -7041,10 +7041,10 @@ valtio@1.13.2:
     proxy-compare "2.6.0"
     use-sync-external-store "1.2.0"
 
-viem@2.9.29:
-  version "2.9.29"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-2.9.29.tgz#0359dcb16eb41ebd7497ec982848d6435bc83d40"
-  integrity sha512-LWvDSyB2tftKuSMAyZTXk3pDYj3c0aaOdr2JbDZEsPJw5zVbqg3FpoPHnUkHai8KcZI8aPWRKV31TYV1cBse9A==
+viem@2.10.5:
+  version "2.10.5"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-2.10.5.tgz#97e53421e20886b34e4e5e03d01f8b6e320d216f"
+  integrity sha512-rzU2y6poYgXu7axcQmwddaJ/nGP3tjtslXdUCu+PvryeXACuuqoyP3chjTEHciG84a663gYbrVGbxNUFA3aURQ==
   dependencies:
     "@adraffy/ens-normalize" "1.10.0"
     "@noble/curves" "1.2.0"

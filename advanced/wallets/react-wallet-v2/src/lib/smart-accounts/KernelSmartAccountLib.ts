@@ -2,11 +2,13 @@ import {
   Address,
   concat,
   concatHex,
+  createClient,
   createPublicClient,
   getTypesForEIP712Domain,
   hashTypedData,
   Hex,
   http,
+  HttpTransport,
   keccak256,
   PrivateKeyAccount,
   PublicClient,
@@ -44,12 +46,17 @@ import {
   SECP256K1_SIGNATURE_VALIDATOR_ADDRESS
 } from '@/utils/permissionValidatorUtils/constants'
 import { executeAbi } from '@/utils/safe7579AccountUtils/abis/Account'
-import { ENTRYPOINT_ADDRESS_V07_TYPE } from 'permissionless/_types/types'
+import { ENTRYPOINT_ADDRESS_V07_TYPE, UserOperation } from 'permissionless/_types/types'
 import {
   getPermissionScopeData,
   PermissionContext,
   SingleSignerPermission
 } from '@/utils/permissionValidatorUtils'
+import { SendCallsParams, SendCallsPaymasterServiceCapabilityParam } from '@/data/EIP5792Data'
+import { getSendCallData } from '@/utils/EIP5792WalletUtil'
+import { paymasterActionsEip7677 } from 'permissionless/experimental'
+import { createPimlicoBundlerClient } from 'permissionless/clients/pimlico'
+import { PIMLICO_NETWORK_NAMES, UrlConfig } from '@/utils/SmartAccountUtil'
 
 type SmartAccountLibOptions = {
   privateKey: string
@@ -76,6 +83,7 @@ export class KernelSmartAccountLib implements EIP155Wallet {
 
   #signerPrivateKey: string
   public type: string = 'Kernel'
+  pimlicoBundlerUrl: HttpTransport
 
   public constructor({
     privateKey,
@@ -91,6 +99,10 @@ export class KernelSmartAccountLib implements EIP155Wallet {
     if (entryPointVersion === 6) {
       this.entryPoint = ENTRYPOINT_ADDRESS_V06
     }
+    const apiKey = process.env.NEXT_PUBLIC_PIMLICO_KEY
+    const pimlicoBundlerUrl = ({ chain }: UrlConfig) =>
+      `https://api.pimlico.io/v1/${PIMLICO_NETWORK_NAMES[chain.name]}/rpc?apikey=${apiKey}`
+    this.pimlicoBundlerUrl = http(pimlicoBundlerUrl({ chain: this.chain }))
   }
   async init() {
     const projectId = process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID
@@ -416,5 +428,106 @@ export class KernelSmartAccountLib implements EIP155Wallet {
       permittedScopeSignature: permittedScopeSignature,
       enableSig: enableSig
     }
+  }
+
+  async sendERC5792Calls(sendCallsParam: SendCallsParams) {
+    if (!this.client || !this.client.account) {
+      throw new Error('Client not initialized')
+    }
+    const pimlicoBundlerClient = createPimlicoBundlerClient({
+      entryPoint: this.entryPoint,
+      transport: this.pimlicoBundlerUrl
+    })
+    const gasPrice = (await pimlicoBundlerClient.getUserOperationGasPrice()).fast
+    const calls = getSendCallData(sendCallsParam)
+    const capabilities = sendCallsParam.capabilities
+    if (capabilities && capabilities['paymasterService']) {
+      console.log('executing sendCalls with paymasterService')
+      const paymasterService = capabilities[
+        'paymasterService'
+      ] as SendCallsPaymasterServiceCapabilityParam
+
+      const paymasterUrl = paymasterService.url
+
+      const userOpPreStubData: Omit<
+        UserOperation<'v0.7'>,
+        'signature' | 'paymaster' | 'paymasterData'
+      > = {
+        sender: this.client.account.address,
+        nonce: await this.client.account.getNonce(),
+        factory: await this.client.account.getFactory(),
+        factoryData: await this.client.account.getFactoryData(),
+        callData: await this.client.account.encodeCallData(calls),
+        callGasLimit: 0n,
+        verificationGasLimit: 0n,
+        preVerificationGas: 0n,
+        maxFeePerGas: gasPrice.maxFeePerGas,
+        maxPriorityFeePerGas: gasPrice.maxPriorityFeePerGas,
+        // paymaster: '0x',
+        paymasterVerificationGasLimit: 0n,
+        paymasterPostOpGasLimit: 0n
+        // paymasterData: '0x',
+        // signature: '0x'
+      }
+
+      const paymasterClient = createClient({
+        chain: this.chain,
+        transport: http(paymasterUrl)
+      }).extend(paymasterActionsEip7677(ENTRYPOINT_ADDRESS_V07))
+
+      const paymasterStubData = await paymasterClient.getPaymasterStubData({
+        userOperation: userOpPreStubData,
+        chain: this.chain,
+        context: paymasterService.context
+      })
+      console.log({ paymasterStubData })
+      const userOpWithStubData: UserOperation<'v0.7'> = {
+        ...userOpPreStubData,
+        ...paymasterStubData,
+        signature: '0x'
+      }
+
+      const dummySignature = await this.client.account.getDummySignature(userOpWithStubData)
+      userOpWithStubData.signature = dummySignature
+
+      const gasEstimation = await pimlicoBundlerClient.estimateUserOperationGas({
+        userOperation: userOpWithStubData
+      })
+      console.log({ gasEstimation })
+      const userOpWithGasEstimates: UserOperation<'v0.7'> = {
+        ...userOpWithStubData,
+        ...gasEstimation
+      }
+
+      const paymasterData = await paymasterClient.getPaymasterData({
+        userOperation: {
+          ...userOpWithGasEstimates,
+          paymasterPostOpGasLimit: gasEstimation.paymasterPostOpGasLimit || 0n,
+          paymasterVerificationGasLimit: gasEstimation.paymasterVerificationGasLimit || 0n
+        },
+        chain: this.chain,
+        context: paymasterService.context
+      })
+      console.log({ paymasterData })
+      const userOpWithPaymasterData: UserOperation<'v0.7'> = {
+        ...userOpWithGasEstimates,
+        ...paymasterData
+      }
+
+      const userOp = userOpWithPaymasterData
+
+      const newSignature = await this.client.account.signUserOperation(userOp)
+      console.log('Signatures', { old: userOp.signature, new: newSignature })
+
+      userOp.signature = newSignature
+
+      const userOpHash = await pimlicoBundlerClient.sendUserOperation({
+        userOperation: userOp
+      })
+      console.log({ userOpHash })
+      return userOpHash
+    }
+    console.log('executing sendCalls')
+    return this.sendBatchTransaction(calls)
   }
 }

@@ -33,6 +33,10 @@ export type SendCallsParams = {
   }[]
   capabilities?: Record<string, any> | undefined
 }
+export type SendCallsPaymasterServiceCapabilityParam = {
+  url: string
+  context: Record<string, any> | undefined
+}
 
 export type GetCallsResult = {
   status: 'PENDING' | 'CONFIRMED'
@@ -58,9 +62,9 @@ export const supportedEIP5792CapabilitiesForEOA: GetCapabilitiesResult = {
 export const supportedEIP5792CapabilitiesForSCA: GetCapabilitiesResult = {
   //Ethereum Sepolia
   '0xaa36a7': {
-    // paymasterService: {
-    //   supported: true,
-    // },
+    paymasterService: {
+      supported: true
+    },
     // sessionKey: {
     //   supported: true,
     // },

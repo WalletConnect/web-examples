@@ -58,14 +58,6 @@ const getCallsReceipt = async (getCallParams: GetCallsParams) => {
   return receipt
 }
 
-const getSendCallData = (sendCallParams: SendCallsParams) => {
-  return sendCallParams.calls.map(call => ({
-    to: call.to,
-    value: BigInt(call.value || 0),
-    data: call.data || '0x'
-  }))
-}
-
 export async function approveEIP5792Request(requestEvent: RequestEventArgs) {
   const { params, id } = requestEvent
   const { chainId, request } = params
@@ -112,8 +104,7 @@ export async function approveEIP5792Request(requestEvent: RequestEventArgs) {
         const sendCallParams: SendCallsParams = request.params[0] as SendCallsParams
         if (chainId.split(':')[1] !== BigInt(sendCallParams.chainId).toString())
           return formatJsonRpcError(id, 'ChainId mismatch')
-        const sendCalls = getSendCallData(sendCallParams)
-        const userOpHash = await wallet.sendBatchTransaction(sendCalls)
+        const userOpHash = await wallet.sendERC5792Calls(sendCallParams)
         return formatJsonRpcResult(id, userOpHash)
       } catch (error: any) {
         console.error(error)
