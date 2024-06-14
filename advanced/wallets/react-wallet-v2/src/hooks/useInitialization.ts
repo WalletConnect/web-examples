@@ -12,6 +12,7 @@ import { createOrRestoreKadenaWallet } from '@/utils/KadenaWalletUtil'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSnapshot } from 'valtio'
 import useSmartAccounts from './useSmartAccounts'
+import { createOrRestoreBip122Wallet } from '@/utils/Bip122WalletUtil'
 
 export default function useInitialization() {
   const [initialized, setInitialized] = useState(false)
@@ -31,6 +32,7 @@ export default function useInitialization() {
       const { tronAddresses } = await createOrRestoreTronWallet()
       const { tezosAddresses } = await createOrRestoreTezosWallet()
       const { kadenaAddresses } = await createOrRestoreKadenaWallet()
+      const { bip122Addresses } = await createOrRestoreBip122Wallet()
       await initializeSmartAccounts(eip155Wallets[eip155Addresses[0]].getPrivateKey())
 
       SettingsStore.setEIP155Address(eip155Addresses[0])
@@ -42,6 +44,7 @@ export default function useInitialization() {
       SettingsStore.setTronAddress(tronAddresses[0])
       SettingsStore.setTezosAddress(tezosAddresses[0])
       SettingsStore.setKadenaAddress(kadenaAddresses[0])
+      SettingsStore.setbip122Address(bip122Addresses[0])
       await createWeb3Wallet(relayerRegionURL)
       setInitialized(true)
     } catch (err: unknown) {

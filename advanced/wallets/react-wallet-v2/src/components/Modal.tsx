@@ -19,6 +19,8 @@ import { useCallback, useMemo } from 'react'
 import AuthRequestModal from '@/views/AuthRequestModal'
 import LoadingModal from '@/views/LoadingModal'
 import SessionAuthenticateModal from '@/views/SessionAuthenticateModal'
+import SessionSignBip122Modal from '@/views/SessionSignBip122Modal'
+import SessionSendTransactionBip122Modal from '@/views/SessionSendTransactionBip122Modal'
 
 export default function Modal() {
   const { open, view } = useSnapshot(ModalStore.state)
@@ -65,6 +67,10 @@ export default function Modal() {
         return <LoadingModal />
       case 'SessionAuthenticateModal':
         return <SessionAuthenticateModal />
+      case 'SessionSignBip122Modal':
+        return <SessionSignBip122Modal />
+      case 'SessionSendTransactionBip122Modal':
+        return <SessionSendTransactionBip122Modal />
       default:
         return null
     }

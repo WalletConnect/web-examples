@@ -23,6 +23,7 @@ import {
   DEFAULT_EIP155_OPTIONAL_METHODS,
   DEFAULT_EIP5792_METHODS,
   GetCapabilitiesResult,
+  DEFAULT_BIP122_METHODS,
 } from "../constants";
 import { AccountAction, setLocaleStorageTestnetFlag } from "../helpers";
 import Toggle from "../components/Toggle";
@@ -48,6 +49,7 @@ import OriginSimulationDropdown from "../components/OriginSimulationDropdown";
 import LoaderModal from "../modals/LoaderModal";
 import { numberToHex } from "@walletconnect/encoding";
 import RequestLoaderModal from "../modals/RequestLoaderModal";
+import { cons } from "fp-ts/lib/ReadonlyNonEmptyArray";
 
 // Normal import does not work here
 const { version } = require("@walletconnect/sign-client/package.json");
@@ -92,6 +94,7 @@ const Home: NextPage = () => {
     tronRpc,
     tezosRpc,
     kadenaRpc,
+    bip122Rpc,
     isRpcRequestPending,
     rpcResult,
     isTestnet,
@@ -467,6 +470,27 @@ const Home: NextPage = () => {
     ];
   };
 
+  const getBip122Actions = (): AccountAction[] => {
+    const onSignMessage = async (chainId: string, address: string) => {
+      openRequestModal();
+      await bip122Rpc.testSignMessage(chainId, address);
+    };
+    const onSendTransaction = async (chainId: string, address: string) => {
+      openRequestModal();
+      await bip122Rpc.testSendTransaction(chainId, address);
+    };
+    return [
+      {
+        method: DEFAULT_BIP122_METHODS.BIP122_SIGN_MESSAGE,
+        callback: onSignMessage,
+      },
+      {
+        method: DEFAULT_BIP122_METHODS.BIP122_SEND_TRANSACTION,
+        callback: onSendTransaction,
+      },
+    ];
+  };
+
   const getBlockchainActions = (account: string) => {
     const [namespace, chainId, address] = account.split(":");
     switch (namespace) {
@@ -488,6 +512,8 @@ const Home: NextPage = () => {
         return getTezosActions();
       case "kadena":
         return getKadenaActions();
+      case "bip122":
+        return getBip122Actions();
       default:
         break;
     }

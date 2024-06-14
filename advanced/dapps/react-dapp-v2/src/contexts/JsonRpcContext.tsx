@@ -27,6 +27,7 @@ import {
   createWalletConnectSign,
 } from "@kadena/client";
 import { PactNumber } from "@kadena/pactjs";
+import BitcoinMessage from "bitcoinjs-message";
 import {
   KadenaAccount,
   eip712,
@@ -54,6 +55,7 @@ import {
   SendCallsParams,
   GetCapabilitiesResult,
   GetCallsResult,
+  DEFAULT_BIP122_METHODS,
 } from "../constants";
 import { useChainData } from "./ChainDataContext";
 import { rpcProvidersByChainId } from "../../src/helpers/api";
@@ -68,6 +70,10 @@ import {
 import { UserVerifier } from "@multiversx/sdk-wallet/out/userVerifier";
 import { SignClient } from "@walletconnect/sign-client/dist/types/client";
 import { parseEther } from "ethers/lib/utils";
+import {
+  apiGetAddressUtxos,
+  getAvailableBalanceFromUtxos,
+} from "../helpers/bip122";
 
 /**
  * Types
@@ -132,6 +138,10 @@ interface IContext {
     testGetAccounts: TRpcRequestCallback;
     testSign: TRpcRequestCallback;
     testQuicksign: TRpcRequestCallback;
+  };
+  bip122Rpc: {
+    testSignMessage: TRpcRequestCallback;
+    testSendTransaction: TRpcRequestCallback;
   };
   rpcResult?: IFormattedRpcResponse | null;
   isRpcRequestPending: boolean;
@@ -1573,6 +1583,76 @@ export function JsonRpcContextProvider({
     ),
   };
 
+  const bip122Rpc = {
+    testSignMessage: _createJsonRpcRequestHandler(
+      async (
+        chainId: string,
+        address: string
+      ): Promise<IFormattedRpcResponse> => {
+        const method = DEFAULT_BIP122_METHODS.BIP122_SIGN_MESSAGE;
+        const message = "This is a message to be signed for BIP122";
+        const result = await client!.request<{
+          signature: string;
+          segwitType: string;
+        }>({
+          topic: session!.topic,
+          chainId: chainId,
+          request: {
+            method,
+            params: [message, address],
+          },
+        });
+        const checkSegwitAlways =
+          result.segwitType === ("p2wpkh" || "p2sh(p2wpkh)");
+        return {
+          method,
+          address: address,
+          valid: BitcoinMessage.verify(
+            message,
+            address,
+            result.signature,
+            undefined,
+            checkSegwitAlways
+          ),
+          result: `
+              signature: ${result.signature}\n
+              segwitType: ${result.segwitType}
+            `,
+        };
+      }
+    ),
+    testSendTransaction: _createJsonRpcRequestHandler(
+      async (
+        chainId: string,
+        address: string
+      ): Promise<IFormattedRpcResponse> => {
+        const method = DEFAULT_BIP122_METHODS.BIP122_SEND_TRANSACTION;
+
+        const utxos = await apiGetAddressUtxos(address, chainId);
+        const availableBalance = getAvailableBalanceFromUtxos(utxos); // in satoshis
+        const result = await client!.request<any>({
+          topic: session!.topic,
+          chainId: chainId,
+          request: {
+            method,
+            params: {
+              address,
+              value: availableBalance,
+              transactionType: "p2wpkh",
+            },
+          },
+        });
+
+        return {
+          method,
+          address: address,
+          valid: true,
+          result: result,
+        };
+      }
+    ),
+  };
+
   return (
     <JsonRpcContext.Provider
       value={{
@@ -1590,6 +1670,7 @@ export function JsonRpcContextProvider({
         isRpcRequestPending: pending,
         isTestnet,
         setIsTestnet,
+        bip122Rpc,
       }}
     >
       {children}

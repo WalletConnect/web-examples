@@ -3,6 +3,7 @@ import { apiGetKadenaAccountBalance } from "./kadena";
 
 import { AssetData } from "./types";
 import { PactCommand } from "@kadena/client";
+import { apiGetBip122AccountBalance } from "./bip122";
 
 export type RpcProvidersByChainId = Record<
   number,
@@ -153,6 +154,10 @@ export async function apiGetAccountBalance(
       address,
       networkId as PactCommand["networkId"]
     );
+  }
+
+  if (namespace === "bip122") {
+    return apiGetBip122AccountBalance(address, networkId as string);
   }
 
   if (namespace !== "eip155") {

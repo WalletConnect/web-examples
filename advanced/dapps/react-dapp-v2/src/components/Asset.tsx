@@ -10,6 +10,9 @@ import { getChainMetadata } from "../chains";
 const xdaiLogo = getChainMetadata("eip155:100").logo;
 const maticLogo = getChainMetadata("eip155:137").logo;
 const kadenaLogo = getChainMetadata("kadena:testnet04").logo;
+const btcLogo = getChainMetadata(
+  "bip122:000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"
+).logo;
 
 const SAsset = styled.div`
   width: 100%;
@@ -48,6 +51,8 @@ function getAssetIcon(asset: AssetData): JSX.Element {
       return <Icon src={maticLogo} />;
     case "kda":
       return <Icon src={kadenaLogo} />;
+    case "btc":
+      return <Icon src={btcLogo} />;
     default:
       return <Icon src={"/assets/eth20.svg"} />;
   }

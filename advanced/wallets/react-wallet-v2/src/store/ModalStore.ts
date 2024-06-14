@@ -34,6 +34,8 @@ interface State {
     | 'AuthRequestModal'
     | 'SessionAuthenticateModal'
     | 'LoadingModal'
+    | 'SessionSignBip122Modal'
+    | 'SessionSendTransactionBip122Modal'
   data?: ModalData
 }
 

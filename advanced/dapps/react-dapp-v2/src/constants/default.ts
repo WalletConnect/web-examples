@@ -38,6 +38,7 @@ export const DEFAULT_TEST_CHAINS = [
   "tron:0xcd8690dc",
   "tezos:testnet",
   "kadena:testnet04",
+  "bip122:000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943",
 ];
 
 export const DEFAULT_CHAINS = [...DEFAULT_MAIN_CHAINS, ...DEFAULT_TEST_CHAINS];
@@ -224,6 +225,15 @@ export enum DEFAULT_KADENA_METHODS {
 }
 
 export enum DEFAULT_KADENA_EVENTS {}
+/**
+ * BITCOIN
+ */
+export enum DEFAULT_BIP122_METHODS {
+  BIP122_SIGN_MESSAGE = "btc_signMessage",
+  BIP122_SEND_TRANSACTION = "btc_sendTransaction",
+}
+
+export enum DEFAULT_BIP122_EVENTS {}
 
 export const REGIONALIZED_RELAYER_ENDPOINTS: RelayerType[] = [
   {

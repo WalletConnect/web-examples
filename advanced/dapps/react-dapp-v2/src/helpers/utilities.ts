@@ -196,7 +196,11 @@ export const toWad = (amount: string, decimals = 18): BigNumber => {
 };
 
 export const fromWad = (wad: BigNumberish, decimals = 18): string => {
-  return sanitizeDecimals(utils.formatUnits(wad, decimals), decimals);
+  try {
+    return sanitizeDecimals(utils.formatUnits(wad, decimals), decimals);
+  } catch (e) {
+    return wad?.toString();
+  }
 };
 
 export const LOCALSTORAGE_KEY_TESTNET = "TESTNET";
