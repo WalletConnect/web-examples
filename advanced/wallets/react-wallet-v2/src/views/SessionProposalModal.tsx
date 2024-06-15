@@ -100,7 +100,9 @@ export default function SessionProposalModal() {
         chains: eip155Chains,
         methods: eip155Methods.concat(eip5792Methods),
         events: ['accountsChanged', 'chainChanged'],
-        accounts: eip155Chains.map(chain => `${chain}:${eip155Addresses[0]}`).flat()
+        accounts: eip155Chains
+          .map(chain => [`${chain}:${eip155Addresses[0]}`, `${chain}:${eip155Addresses[1]}`])
+          .flat()
       },
       cosmos: {
         chains: cosmosChains,
