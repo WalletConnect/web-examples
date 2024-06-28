@@ -1,4 +1,6 @@
 //Note: ES6 syntax dont work for this package
+import { PERMISSION_VALIDATOR_V2_ADDRESS } from '@/utils/permissionValidatorUtils/constants'
+import { MOCK_VALIDATOR_V2_ADDRESS } from '@/utils/safe7579AccountUtils/constants'
 import { ModuleType } from '@rhinestone/module-sdk'
 const {
   MULTI_FACTOR_VALIDATOR_ADDRESS,
@@ -27,6 +29,22 @@ export type Module = {
   view?: ModuleView
 }
 export const supportedModules: Module[] = [
+  {
+    name: 'Mock Validator V2',
+    type: 'validator',
+    url: '/mock-validator-v2',
+    moduleAddress: MOCK_VALIDATOR_V2_ADDRESS,
+    description: `Mock Validator`,
+    moduleData: '0x'
+  },
+  {
+    name: 'Permission Validator V2',
+    type: 'executor',
+    url: '/permission-validator-v2',
+    moduleAddress: PERMISSION_VALIDATOR_V2_ADDRESS,
+    description: `The Permission Validator module is a module that allows DApp to request permissions from a wallet in order to execute transactions on users's behalf that is scoped with permissions`,
+    moduleData: '0x'
+  },
   {
     name: 'Permission Validator',
     type: 'validator',
