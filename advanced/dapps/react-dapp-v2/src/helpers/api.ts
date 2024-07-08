@@ -172,7 +172,7 @@ export async function apiGetAccountBalance(
     id: 1,
   });
   const { result } = response.data;
-  const balance = parseInt(result, 16).toString();
+  const balance = BigInt(result).toString();
   return { balance, ...token };
 }
 
