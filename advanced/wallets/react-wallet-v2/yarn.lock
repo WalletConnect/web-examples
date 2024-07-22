@@ -872,12 +872,12 @@
     "@pedrouid/environment" "^1.0.1"
 
 "@kadena/cryptography-utils@^0.4.0":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@kadena/cryptography-utils/-/cryptography-utils-0.4.2.tgz#00b13ad4db91afbcde43c309d03c309ba8e40a86"
-  integrity sha512-4OdFS7fDYkvhq89JHj0kB8qHBk19hgbX5UN/959ibv6mtMvBjNgq/MVT3Fa146wgFqAHVySyzWi8pSeD9Qzk1A==
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@kadena/cryptography-utils/-/cryptography-utils-0.4.4.tgz#30567bf13c2de04539fffdfc4ad31e96f7230ad0"
+  integrity sha512-8xUcGlmBuuR9PSW88eqJuW49EmcQeiplDlsvN1N++1Bw6KV4lXlBKlJn5TM8lxctGNpewtzlIUimQFIlMqm9aw==
   dependencies:
     blakejs "^1.2.1"
-    buffer "^6.0.3"
+    buffer "6.0.3"
     tweetnacl "^1.0.3"
 
 "@kadena/types@^0.6.0":
