@@ -3058,10 +3058,10 @@
   dependencies:
     merkletreejs "^0.3.11"
 
-"@zerodev/weighted-ecdsa-validator@5.3.0":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@zerodev/weighted-ecdsa-validator/-/weighted-ecdsa-validator-5.3.0.tgz#c357adbcb55c524390efb6c68ca1e44d318044e3"
-  integrity sha512-BvBX3G4aTJP6wmLm3fmQ+bj13Xk4/nu45XOzk0ZYsbXddQvcMXAGeOxIhwTIinOBu4ABpy5PUZcFqmXRQ5IkhA==
+"@zerodev/weighted-ecdsa-validator@5.3.1":
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/@zerodev/weighted-ecdsa-validator/-/weighted-ecdsa-validator-5.3.1.tgz#87ff2b5760aaea3aa12674b2cb4f7274df4ae1ea"
+  integrity sha512-RGaAanL7Zu6okUC+twjDQyx9VeE2b+Zq0kK7Hg0MLUZ3RyFYyIhml3+VSjAvrdSLU2o/5tofu5Lqok/8AgiJ5Q==
 
 JSONStream@^1.3.5:
   version "1.3.5"
