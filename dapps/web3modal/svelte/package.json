@@ -30,7 +30,7 @@
   "type": "module",
   "dependencies": {
     "@tanstack/react-query": "^5.18.1",
-    "@wagmi/connectors": "4.1.13",
+    "@wagmi/connectors": "4.3.10",
     "@wagmi/core": "2.8.0",
     "@web3modal/wagmi": "4.1.11",
     "svelte-french-toast": "1.2.0",
