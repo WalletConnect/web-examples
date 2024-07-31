@@ -1,0 +1,20 @@
+services:
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:nightly-f6208d8db68f9acbe4ff8cd76958309efb61ea0b
+    ports: ["8545:8545"]
+    entrypoint: [ "anvil","--chain-id", "31337", "--fork-url", "https://gateway.tenderly.co/public/sepolia", "--host", "0.0.0.0", "--block-time", "0.1", "--gas-price", "1", "--silent",]
+    platform: linux/amd64
+ 
+  mock-paymaster:
+    image: ghcr.io/pimlicolabs/mock-verifying-paymaster:main
+    ports: ["3000:3000"]
+    environment:
+      - ALTO_RPC=http://alto:4337
+      - ANVIL_RPC=http://anvil:8545
+ 
+  alto:
+    image: ghcr.io/pimlicolabs/mock-alto-bundler:main
+    ports: ["4337:4337"]
+    environment:
+      - ANVIL_RPC=http://anvil:8545
+      - SKIP_DEPLOYMENTS=true

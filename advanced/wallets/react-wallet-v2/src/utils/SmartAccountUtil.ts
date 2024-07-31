@@ -1,15 +1,11 @@
 import { BiconomySmartAccountLib } from './../lib/smart-accounts/BiconomySmartAccountLib'
-import { Hex } from 'viem'
+import { Hex, Chain as ViemChain } from 'viem'
 import { SessionTypes } from '@walletconnect/types'
 import { Chain, allowedChains } from '@/consts/smartAccounts'
 import { KernelSmartAccountLib } from '@/lib/smart-accounts/KernelSmartAccountLib'
 import { sepolia } from 'viem/chains'
 import { SafeSmartAccountLib } from '@/lib/smart-accounts/SafeSmartAccountLib'
 import { SmartAccountLib } from '@/lib/smart-accounts/SmartAccountLib'
-
-export type UrlConfig = {
-  chain: Chain
-}
 
 // Entrypoints [I think this is constant but JIC]
 export const ENTRYPOINT_ADDRESSES: Record<Chain['name'], Hex> = {
@@ -34,14 +30,14 @@ export const USDC_ADDRESSES: Record<Chain['name'], Hex> = {
 }
 
 // RPC URLs
-export const RPC_URLS: Record<Chain['name'], string> = {
+export const RPC_URLS: Record<ViemChain['name'], string> = {
   Sepolia: 'https://rpc.ankr.com/eth_sepolia',
   'Polygon Mumbai': 'https://mumbai.rpc.thirdweb.com',
   Goerli: 'https://ethereum-goerli.publicnode.com'
 }
 
 // Pimlico RPC names
-export const PIMLICO_NETWORK_NAMES: Record<Chain['name'], string> = {
+export const PIMLICO_NETWORK_NAMES: Record<ViemChain['name'], string> = {
   Sepolia: 'sepolia',
   'Polygon Mumbai': 'mumbai',
   Goerli: 'goerli'
@@ -143,4 +139,37 @@ export async function createOrRestoreBiconomySmartAccount(privateKey: string) {
   return {
     biconomySmartAccountAddress: address
   }
+}
+
+export type UrlConfig = {
+  chain: Chain | ViemChain
+}
+
+export const publicClientUrl = ({ chain }: UrlConfig) => {
+  return process.env.NEXT_PUBLIC_LOCAL_CLIENT_URL || publicRPCUrl({ chain })
+}
+
+export const paymasterUrl = ({ chain }: UrlConfig) => {
+  const apiKey = process.env.NEXT_PUBLIC_PIMLICO_KEY
+  if (apiKey == null) {
+    throw new Error('Pimlico API Key not set')
+  }
+
+  const localPaymasterUrl = process.env.NEXT_PUBLIC_LOCAL_PAYMASTER_URL
+  if (localPaymasterUrl) {
+    return localPaymasterUrl
+  }
+  return `https://api.pimlico.io/v2/${PIMLICO_NETWORK_NAMES[chain.name]}/rpc?apikey=${apiKey}`
+}
+
+export const bundlerUrl = ({ chain }: UrlConfig) => {
+  const apiKey = process.env.NEXT_PUBLIC_PIMLICO_KEY
+  if (apiKey == null) {
+    throw new Error('Pimlico API Key not set')
+  }
+  const localBundlerUrl = process.env.NEXT_PUBLIC_LOCAL_BUNDLER_URL
+  if (localBundlerUrl) {
+    return localBundlerUrl
+  }
+  return `https://api.pimlico.io/v1/${PIMLICO_NETWORK_NAMES[chain.name]}/rpc?apikey=${apiKey}`
 }

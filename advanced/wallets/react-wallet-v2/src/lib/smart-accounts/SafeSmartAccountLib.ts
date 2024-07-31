@@ -40,6 +40,7 @@ export class SafeSmartAccountLib extends SmartAccountLib {
       safeVersion: '1.4.1',
       entryPoint: ENTRYPOINT_ADDRESS_V07,
       safe4337ModuleAddress: this.SAFE_4337_MODULE_ADDRESS,
+      //@ts-ignore
       erc7579LaunchpadAddress: this.ERC_7579_LAUNCHPAD_ADDRESS,
       signer: this.signer
     })
