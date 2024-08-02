@@ -36,7 +36,7 @@
     "@walletconnect/web3wallet": "1.13.0",
     "@zerodev/ecdsa-validator": "5.3.0",
     "@zerodev/presets": "5.3.0",
-    "@zerodev/sdk": "5.3.1",
+    "@zerodev/sdk": "5.3.8",
     "@zerodev/session-key": "5.4.0",
     "@zerodev/weighted-ecdsa-validator": "5.3.0",
     "borsh": "^1.0.0",

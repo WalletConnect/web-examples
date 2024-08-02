@@ -3044,10 +3044,10 @@
   resolved "https://registry.yarnpkg.com/@zerodev/presets/-/presets-5.3.0.tgz#cc04174a48a3da195b5959a71077ee2e47d1904e"
   integrity sha512-7g7dhUq7gQ12uUaP+LYT4nILjzJyLbPNjYEYKuBTWsLSjX1A/yt/VMQetXiSXnRrfDq+G/UUj1nMo57DwOFZsQ==
 
-"@zerodev/sdk@5.3.1":
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/@zerodev/sdk/-/sdk-5.3.1.tgz#e9317e786fababbc536dfd199f836cac4dc54c1b"
-  integrity sha512-zH2iVhgwuWm9UVzQA/eny5CAQxgZIfktpz+rxW9rw/W3FIErIghTzCYKdJMJ7HbNw2q1pqyQ/IfaFabhcsz0cQ==
+"@zerodev/sdk@5.3.8":
+  version "5.3.8"
+  resolved "https://registry.yarnpkg.com/@zerodev/sdk/-/sdk-5.3.8.tgz#2a86ed8ac1d8706e71b9e98bec81e04bbe62deab"
+  integrity sha512-CA5SkVUXbu8NCa7vxXp3KXt+c1yVDZwF1vQk+JsTW5QKTBBo0czeR8amb+VI5B1Dhz2lUTbv0SqLfJ/7JeXrMw==
   dependencies:
     semver "^7.6.0"
 
