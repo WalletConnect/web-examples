@@ -13,10 +13,11 @@ import toast from "react-hot-toast";
 interface PairingModalProps {
   pairings: PairingTypes.Struct[];
   connect: (pairing?: { topic: string }) => Promise<void>;
+  disconnectPairing: (pairing?: { topic: string }) => Promise<void>;
 }
 
 const PairingModal = (props: PairingModalProps) => {
-  const { pairings, connect } = props;
+  const { pairings, connect, disconnectPairing } = props;
   const [pairing, setPairing] = React.useState<PairingTypes.Struct>();
 
   const onConnect = React.useCallback(
@@ -43,11 +44,15 @@ const PairingModal = (props: PairingModalProps) => {
       <SModalTitle>{"Select available pairing or create new one"}</SModalTitle>
       <STable>
         {pairings.map((pairing) => (
-          <Pairing
-            key={pairing.topic}
-            pairing={pairing}
-            onClick={() => onConnect(pairing)}
-          />
+          <div key={pairing.topic} style={{ display: "flex" }}>
+            <Pairing pairing={pairing} onClick={() => onConnect(pairing)} />
+            <span
+              style={{ margin: "auto 20px", cursor: "pointer" }}
+              onClick={() => disconnectPairing(pairing)}
+            >
+              X
+            </span>
+          </div>
         ))}
       </STable>
       <Button onClick={() => connect()}>{`New Pairing`}</Button>

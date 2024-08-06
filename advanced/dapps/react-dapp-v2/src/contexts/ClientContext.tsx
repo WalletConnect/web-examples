@@ -37,6 +37,7 @@ interface IContext {
   client: Client | undefined;
   session: SessionTypes.Struct | undefined;
   connect: (pairing?: { topic: string }) => Promise<void>;
+  disconnectPairing: (pairing?: { topic: string }) => Promise<void>;
   disconnect: () => Promise<void>;
   isInitializing: boolean;
   chains: string[];
@@ -192,6 +193,21 @@ export function ClientContextProvider({
     [chains, client, onSessionConnected]
   );
 
+  const disconnectPairing = useCallback(
+    async (pairing: any) => {
+      if (typeof client === "undefined") {
+        throw new Error("WalletConnect is not initialized");
+      }
+      if (typeof pairing === "undefined") {
+        throw new Error("Pairing is not defined");
+      }
+
+      await client.core.pairing.disconnect({ topic: pairing?.topic });
+      setPairings(client.pairing.getAll({ active: true }));
+    },
+    [client]
+  );
+
   const disconnect = useCallback(async () => {
     if (typeof client === "undefined") {
       throw new Error("WalletConnect is not initialized");
@@ -260,6 +276,7 @@ export function ClientContextProvider({
         );
         console.log("RESTORED SESSION:", _session);
         await onSessionConnected(_session);
+
         return _session;
       }
     },
@@ -375,6 +392,7 @@ export function ClientContextProvider({
       setChains,
       setRelayerRegion,
       origin,
+      disconnectPairing,
     }),
     [
       pairings,
@@ -392,6 +410,7 @@ export function ClientContextProvider({
       setChains,
       setRelayerRegion,
       origin,
+      disconnectPairing,
     ]
   );
 

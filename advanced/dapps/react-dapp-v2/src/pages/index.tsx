@@ -79,6 +79,7 @@ const Home: NextPage = () => {
     setChains,
     setRelayerRegion,
     origin,
+    disconnectPairing,
   } = useWalletConnectClient();
 
   // Use `JsonRpcContext` to provide us with relevant RPC methods and states.
@@ -524,7 +525,13 @@ const Home: NextPage = () => {
         if (typeof client === "undefined") {
           throw new Error("WalletConnect is not initialized");
         }
-        return <PairingModal pairings={pairings} connect={connect} />;
+        return (
+          <PairingModal
+            pairings={pairings}
+            connect={connect}
+            disconnectPairing={disconnectPairing}
+          />
+        );
       case "request":
         return (
           <RequestModal pending={isRpcRequestPending} result={rpcResult} />
