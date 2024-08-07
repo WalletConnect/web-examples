@@ -276,7 +276,7 @@ export default function SessionProposalModal() {
         }
         //get capabilities for all reorderedEip155Accounts in wallet
         const capabilities = getWalletCapabilities(reorderedEip155Accounts)
-        const sessionProperties = { capabilities: JSON.stringify(capabilities) }
+        const sessionProperties = { capabilities: JSON.stringify(capabilities), bundler_url: `https://api.pimlico.io/v2/11155111/rpc?apikey=${process.env.NEXT_PUBLIC_PIMLICO_KEY}` }
 
         await web3wallet.approveSession({
           id: proposal.id,
