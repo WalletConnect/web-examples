@@ -61,6 +61,14 @@ export const EIP155_MAINNET_CHAINS: Record<string, EIP155Chain> = {
     rgb: '242, 242, 242',
     rpc: 'https://mainnet.era.zksync.io/',
     namespace: 'eip155'
+  },
+  'eip155:50': {
+    chainId: 50,
+    name: 'XDC Network',
+    logo: '/chain-logos/eip155-50.svg',
+    rgb: '25,50,75',
+    rpc: 'https://rpc1.xinfin.network',
+    namespace: 'eip155'
   }
 }
 
@@ -115,7 +123,16 @@ export const EIP155_TEST_CHAINS: Record<string, EIP155Chain> = {
     rgb: '242, 242, 242',
     rpc: 'https://testnet.era.zksync.dev/',
     namespace: 'eip155'
+  },
+  'eip155:51': {
+    chainId: 51,
+    name: 'XDC Apothem TestNet',
+    logo: '/chain-logos/eip155-51.svg',
+    rgb: '25,50,75',
+    rpc: 'https://rpc.apothem.network',
+    namespace: 'eip155'
   }
+
 }
 
 export const EIP155_CHAINS = { ...EIP155_MAINNET_CHAINS, ...EIP155_TEST_CHAINS }

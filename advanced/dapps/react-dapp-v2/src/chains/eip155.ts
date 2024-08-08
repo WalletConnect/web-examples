@@ -18,6 +18,8 @@ export const EIP155Colors = {
   zksync: "90, 90, 90",
   celo: "60, 203, 132",
   arbitrum: "44, 55, 75",
+  xdc: "25, 50, 75",
+
 };
 
 export const EIP155ChainData: ChainsMap = {
@@ -53,6 +55,20 @@ export const EIP155ChainData: ChainsMap = {
     name: "Ethereum Kovan",
     id: "eip155:42",
     rpc: ["https://kovan.poa.network"],
+    slip44: 60,
+    testnet: true,
+  },
+  "50": {
+    name: "XDC Network",
+    id: "eip155:50",
+    rpc: ["https://rpc1.xinfin.network"],
+    slip44: 60,
+    testnet: false,
+  },
+  "51": {
+    name: "XDC Apothem TestNet",
+    id: "eip155:51",
+    rpc: ["https://rpc.apothem.network"],
     slip44: 60,
     testnet: true,
   },
@@ -144,6 +160,16 @@ export const EIP155Metadata: NamespaceMetadata = {
   "5": {
     logo: "/assets/" + "eip155-1.png",
     rgb: EIP155Colors.ethereum,
+  },
+  "50": {
+    name: "XDC Network",
+    logo: "/assets/" + "eip155-50.svg",
+    rgb: EIP155Colors.xdc,
+  },
+  "51": {
+    name: "XDC Apothem TestNet",
+    logo: "/assets/" + "eip155-50.png",
+    rgb: EIP155Colors.xdc,
   },
   "11155111": {
     logo: "/assets/" + "eip155-1.png",

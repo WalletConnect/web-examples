@@ -35,6 +35,22 @@ export const rpcProvidersByChainId: RpcProvidersByChainId = {
       symbol: "ETH",
     },
   },
+  50: {
+    name: "XDC Network",
+    baseURL: WALLETCONNECT_RPC_BASE_URL + "&chainId=eip155:50",
+    token: {
+      name: "XDC",
+      symbol: "XDC",
+    },
+  },
+  51: {
+    name: "XDC Apothem TestNet",
+    baseURL: WALLETCONNECT_RPC_BASE_URL + "&chainId=eip155:51",
+    token: {
+      name: "XDC",
+      symbol: "XDC",
+    },
+  },
   11155111: {
     name: "Ethereum Sepolia",
     baseURL: WALLETCONNECT_RPC_BASE_URL + "&chainId=eip155:11155111",
