@@ -1,4 +1,4 @@
-import { BigNumber, utils } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 import { createContext, ReactNode, useContext, useState } from "react";
 import * as encoding from "@walletconnect/encoding";
 import { Transaction as EthTransaction } from "@ethereumjs/tx";
@@ -303,11 +303,14 @@ export function JsonRpcContextProvider({
             params: [tx],
           },
         });
-
         const CELO_ALFAJORES_CHAIN_ID = 44787;
         const CELO_MAINNET_CHAIN_ID = 42220;
 
         let valid = false;
+        console.log("rpc request", {
+          tx,
+          signedTx,
+        });
         const [, reference] = chainId.split(":");
         if (
           reference === CELO_ALFAJORES_CHAIN_ID.toString() ||
@@ -316,9 +319,26 @@ export function JsonRpcContextProvider({
           const [, signer] = recoverTransaction(signedTx);
           valid = signer.toLowerCase() === address.toLowerCase();
         } else {
-          valid = EthTransaction.fromSerializedTx(
-            signedTx as any
-          ).verifySignature();
+          try {
+            valid = EthTransaction.fromSerializedTx(
+              signedTx as any
+            ).verifySignature();
+          } catch (e) {
+            console.warn("fromSerializedTx failed", e);
+          }
+
+          try {
+            const transaction = ethers.utils.parseTransaction(
+              signedTx.startsWith("0x") ? signedTx : `0x${signedTx}`
+            );
+            console.log("parsed transaction", transaction);
+            valid =
+              transaction.data === tx.data &&
+              transaction.to === tx.to &&
+              transaction.from === tx.from;
+          } catch (e) {
+            console.warn("parseTransaction failed", e);
+          }
         }
 
         return {
