@@ -13,7 +13,7 @@
     "@web3modal/wagmi": "5.0.6",
     "core-js": "3.37.1",
     "viem": "2.9.29",
-    "vue": "3.4.31"
+    "vue": "3.4.37"
   },
   "devDependencies": {
     "@babel/core": "7.12.16",
