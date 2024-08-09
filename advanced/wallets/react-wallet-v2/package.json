@@ -34,7 +34,7 @@
     "@taquito/signer": "^15.1.0",
     "@taquito/taquito": "^15.1.0",
     "@types/semver": "^7.5.8",
-    "@walletconnect/web3wallet": "1.13.0",
+    "@walletconnect/web3wallet": "1.13.0-canary.1",
     "@zerodev/ecdsa-validator": "5.3.0",
     "@zerodev/presets": "5.3.0",
     "@zerodev/sdk": "5.3.1",
